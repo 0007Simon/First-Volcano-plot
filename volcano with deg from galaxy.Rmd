@@ -5,19 +5,18 @@ output: html_notebook
 
 #load relevant libraries and import data
 ```{r}
-
-library(pacman)
-library(tidyverse)
-library(ggtext)
-library(stringr)
-p_load("ggplot2", "ggrepel", "readr", "dplyr", "here")
-tt <- read_tsv("https://zenodo.org/record/2529117/files/limma-voom_luminalpregnant-luminallactate"
+#install and load the relevant libraries(packages)
+install.packages("pacman")
+library("pacman")
+p_load( "tidyverse", "stringr", "ggtext", "ggplot2", "ggrepel", "readr", "dplyr", "here")
+ tt <- read_tsv("https://zenodo.org/record/2529117/files/limma-voom_luminalpregnant-luminallactate"
          )
 ```
 
 ```{r}
-getwd()
-setwd("C:/Users/Eli/Desktop/R material/R tutorial/data viz")
+#prepare your working directory(a directory into which all your progress gets stored)
+here()
+setwd(here())
 ```
 
 #exploration of dataset
@@ -63,13 +62,12 @@ tt$delabel[tt$P.Value <= thres] <- tt$SYMBOL[tt$P.Value <= thres]
 
 ##Generate a volcano plot
 ```{r}
-
-ggplot(tt, aes(x = logFC, y = -log10(P.Value),col = deg)) +geom_point()+
+gplot(tt, aes(x = logFC, y = -log10(P.Value),col = deg)) +geom_point()+
   theme_minimal()+
   geom_text_repel(aes(label = delabel))+
   scale_colour_manual(values = c( "blue", "black", "red"), name = "DEG", breaks = c("DOWN", "NO", "UP"), labels = c("Down", "No", "Up") )+
-  labs(title=stringr::str_wrap(paste0("A volcano plot displaying the proportion of ", "<span style='color:blue '>**down**</span>", " <br> and "  ,"<span style='color: red '>**up**</span>", " genes in a biological condition"), width = 1))+
-  theme( text = element_text(size = 18), panel.grid = element_blank(), axis.line.x = element_line(colour = "black", linewidth = .5), axis.line.y = element_line( colour = "black" ,linewidth = 0.5 ), plot.title= element_markdown(margin = margin(0.5,5,20,5))  , axis.ticks = element_line(linetype = 2), legend.text=element_text(size = 12)) +xlim(c(-10, 10)) + geom_hline( yintercept = -log10(0.001), linetype = 2) 
+  labs(title=stringr::str_wrap(paste0("A volcano plot displaying the proportion of ", "<span style='color:blue '>**down**</span>", " <br> and "  ,"<span style='color: red '>**up**</span>", " regulated genes in a biological condition"), width = 1))+
+  theme( text = element_text(size = 12), panel.grid = element_blank(), axis.line.x = element_line(colour = "black", linewidth = .5), axis.line.y = element_line( colour = "black" ,linewidth = 0.5 ), plot.title= element_markdown(margin = margin(0.5,5,7,5))  , axis.ticks = element_line(linetype = 2), legend.text=element_text(size = 12)) +xlim(c(-10, 10)) + geom_hline( yintercept = -log10(0.001), linetype = 2) 
                      
                       
 ```
@@ -77,13 +75,13 @@ ggplot(tt, aes(x = logFC, y = -log10(P.Value),col = deg)) +geom_point()+
 
 
 ```{r}
-
-
+#save your Volcano plot
+ggsave("Volcano_DEG", plot = last_plot(), device = "pdf", dpi = "retina")
 ```
 
 
 ```{r}
-ggsave("Volcanoplot1.pdf")
+
 ```
 
 
